@@ -14,7 +14,4 @@ target/
 *.pdb
 
 # Custom
-poetry.lock
-pyproject.toml
-download.py
 oscar-test

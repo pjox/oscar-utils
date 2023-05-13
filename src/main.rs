@@ -1,3 +1,4 @@
+use oscar_io::oscar_doc::{Document, SplitFolderReader};
 use serde_json::Value;
 use std::{
     env,
@@ -32,8 +33,12 @@ fn main() {
         };
         let reader = BufReader::new(decoder);
         for line in reader.lines() {
-            let v: Value = serde_json::from_str(&line.unwrap()).unwrap();
-            writeln!(writer, "{}\n", v["content"]).unwrap();
+            let doc = line.unwrap();
+            writeln!(writer, "{}\n", extract_content(&doc));
         }
     }
+}
+
+fn extract_content(doc: &Document) -> &str {
+    doc.content()
 }
