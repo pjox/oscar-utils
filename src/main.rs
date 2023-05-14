@@ -1,5 +1,4 @@
-use oscar_io::oscar_doc::{Document, SplitFolderReader};
-use serde_json::Value;
+use oscar_io::v3::Document;
 use std::{
     env,
     fs::{self, File},
@@ -12,14 +11,14 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     let folder = &args[1];
-    let file_paths: Vec<walkdir::DirEntry> = WalkDir::new(folder)
+    let file_paths: Vec<DirEntry> = WalkDir::new(folder)
         .into_iter()
         .filter_map(Result::ok)
         .filter(|e| e.file_type().is_file())
         .filter(|e| e.file_name().to_str().unwrap().ends_with(".zst"))
         .collect();
 
-    let path = Path::new("clean_de.jsonl");
+    let path = Path::new("clean_de.txt");
     let clean_file = match File::create(&path) {
         Err(why) => panic!("couldn't create {}: {}", path.display(), why),
         Ok(file) => file,
@@ -33,12 +32,24 @@ fn main() {
         };
         let reader = BufReader::new(decoder);
         for line in reader.lines() {
-            let doc = line.unwrap();
-            writeln!(writer, "{}\n", extract_content(&doc));
+            let doc = serde_json::from_str::<Document>(&line.unwrap()).unwrap();
+            if doc.metadata().annotation().is_some() {
+                continue;
+            }
+            match doc.metadata().categories() {
+                Some(categories) => {
+                    if categories.contains(&"adult".to_string())
+                        || categories.contains(&"agressif".to_string())
+                        || categories.contains(&"cryptojacking".to_string())
+                        || categories.contains(&"malware".to_string())
+                        || categories.contains(&"mixed_adult".to_string())
+                    {
+                        continue;
+                    }
+                }
+                None => (),
+            }
+            writeln!(writer, "{}\n", doc.content()).unwrap();
         }
     }
-}
-
-fn extract_content(doc: &Document) -> &str {
-    doc.content()
 }
