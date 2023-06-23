@@ -51,7 +51,13 @@ fn main() {
                 continue;
             }
             if is_short_sentences(&doc) && short_sentences_count < 10 {
-                writeln!(writer, "{}\t{}\ttiny", doc.warc_id(), doc.url().unwrap()).unwrap();
+                writeln!(
+                    writer,
+                    "{}\t{}\tshort_sentences",
+                    doc.warc_id(),
+                    doc.url().unwrap()
+                )
+                .unwrap();
                 short_sentences_count += 1;
                 continue;
             }
