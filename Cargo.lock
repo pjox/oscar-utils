@@ -412,6 +412,7 @@ dependencies = [
  "serde_json",
  "walkdir",
  "warc",
+ "words-count",
  "zstd",
 ]
 
@@ -726,6 +727,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "92888ba5573ff080736b3648696b70cafad7d250551175acbaa4e0385b3e1460"
 
 [[package]]
+name = "unicode-blocks"
+version = "0.1.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c84398c527c802fbf222e5145f220382d60f1878e0e6cb4d22a3080949a8ddcd"
+
+[[package]]
 name = "unicode-ident"
 version = "1.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -971,6 +978,15 @@ name = "windows_x86_64_msvc"
 version = "0.48.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1a515f5799fe4961cb532f983ce2b23082366b898e52ffbce459c86f67c8378a"
+
+[[package]]
+name = "words-count"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d28653ddaede5475c44a03e4014ae19f35aa9b231c423228b28963cb873e4869"
+dependencies = [
+ "unicode-blocks",
+]
 
 [[package]]
 name = "zerocopy"
